@@ -1,8 +1,11 @@
 # INSTRUCTION: Just need to change this path and can run game
 PATH = './Pikadraft' 
 
-import pygame, sys, random, copy, time, collections, os, json
+import pygame, sys, random, copy, time, collections, os, json, hashlib
 from pygame.locals import *
+import tkinter as tk
+from tkinter import messagebox
+
 
 FPS = 10
 WINDOWWIDTH = 1000
@@ -79,123 +82,7 @@ LIST_SOUNDEFFECT = os.listdir('sound_effect')
 
 for i in range(len(LIST_SOUNDEFFECT)):
     LIST_SOUNDEFFECT[i] = pygame.mixer.Sound('sound_effect/' + LIST_SOUNDEFFECT[i])
-# #
-# player_username = ""
-# player_password = ""
-# #
 
-# # Hàm lưu tài khoản vào file
-# def save_accounts_to_file(accounts, filename='accounts.json'):
-#     with open(filename, 'w') as f:
-#         json.dump(accounts, f)
-
-# # Hàm đọc tài khoản từ file
-# def load_accounts_from_file(filename='accounts.json'):
-#     try:
-#         with open(filename, 'r') as f:
-#             return json.load(f)
-#     except FileNotFoundError:
-#         return {}
-# def showLoginScreen():
-#     global player_username, player_password
-#     accounts = load_accounts_from_file()
-#     username = ""
-#     password = ""
-#     is_typing_username = True  # Biến kiểm tra xem người dùng đang nhập username hay password
-
-#     while True:
-#         DISPLAYSURF.fill(BLACK)
-        
-#         # Hiển thị phần nhập tài khoản và mật khẩu
-#         username_text = pygame.font.SysFont('Arial', 50).render(f'Username: {username}', True, WHITE)
-#         password_text = pygame.font.SysFont('Arial', 50).render(f'Password: {"*" * len(password)}', True, WHITE)
-#         DISPLAYSURF.blit(username_text, (250, 100))
-#         DISPLAYSURF.blit(password_text, (250, 200))
-
-#         # Vẽ khung nhập liệu cho tài khoản và mật khẩu
-#         pygame.draw.rect(DISPLAYSURF, WHITE, (450, 100, 400, 60), 4)
-#         pygame.draw.rect(DISPLAYSURF, WHITE, (450, 200, 400, 60), 4)
-
-#         # Kiểm tra sự kiện từ bàn phím
-#         for event in pygame.event.get():
-#             if event.type == pygame.QUIT:
-#                 pygame.quit()
-#                 sys.exit()
-
-#             if event.type == pygame.KEYDOWN:
-#                 if event.key == pygame.K_RETURN:  # Khi nhấn Enter
-#                     if is_typing_username:  # Đổi sang nhập mật khẩu khi đã nhập xong username
-#                         is_typing_username = False
-#                     else:  # Kiểm tra đăng nhập khi đã nhập xong mật khẩu
-#                         if username in accounts and accounts[username] == password:
-#                             player_username = username
-#                             player_password = password
-#                             print(f"Welcome back, {player_username}!")
-#                             # Sau khi đăng nhập thành công, chuyển đến màn hình game mode
-#                             return True  # Trả về True khi đăng nhập thành công
-#                         else:
-#                             print("Invalid username or password.")
-#                             # Có thể reset lại dữ liệu nếu đăng nhập thất bại
-#                             username = ""
-#                             password = ""
-#                             is_typing_username = True
-
-#                 elif event.key == pygame.K_BACKSPACE:  # Xóa ký tự
-#                     if is_typing_username:
-#                         username = username[:-1]
-#                     else:
-#                         password = password[:-1]
-#                 else:  # Thêm ký tự vào tên tài khoản hoặc mật khẩu
-#                     if is_typing_username:
-#                         username += event.unicode
-#                     else:
-#                         password += event.unicode
-
-#         pygame.display.update()
-#         FPSCLOCK.tick(30)
-
-# def showStartScreen():
-#     global player_username
-#     startScreenSound.play()
-
-#     default_color = BLUE
-#     clicked_color = GRAY
-
-#     while True:
-#         DISPLAYSURF.blit(startBG, (0, 0))
-
-#         # Render các nút để chọn chế độ người chơi
-#         guestSurf = pygame.font.SysFont('TIMESNEWROMAN', 40).render('GUEST', True, default_color)
-#         guestRect = guestSurf.get_rect()
-#         guestRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50)
-
-#         loginSurf = pygame.font.SysFont('TIMESNEWROMAN', 40).render('LOGIN', True, default_color)
-#         loginRect = loginSurf.get_rect()
-#         loginRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
-
-#         DISPLAYSURF.blit(guestSurf, guestRect)
-#         DISPLAYSURF.blit(loginSurf, loginRect)
-
-#         # pygame.draw.rect(DISPLAYSURF, RED, guestRect, 4)
-#         # pygame.draw.rect(DISPLAYSURF, RED, loginRect, 4)
-
-#         for event in pygame.event.get():
-#             if event.type == pygame.QUIT:
-#                 pygame.quit()
-#                 sys.exit()
-#             elif event.type == pygame.MOUSEBUTTONUP:
-#                 mousex, mousey = event.pos
-#                 if guestRect.collidepoint((mousex, mousey)):
-#                     player_type = "Guest"
-#                     return showGameModeScreen()  # Không cần phải gọi lại màn hình đăng nhập
-
-#                 elif loginRect.collidepoint((mousex, mousey)):
-#                     player_type = "Login"
-#                     if showLoginScreen():  # Nếu đăng nhập thành công
-#                         return showGameModeScreen()  # Chuyển tới màn hình game mode
-
-#         pygame.display.update()
-#         FPSCLOCK.tick(FPS)
 
 def updateGameVariables(difficulty):
     global board_width, board_height, numheroes_onboard, x_margin, y_margin, lives, numsameheroes
@@ -225,7 +112,6 @@ def updateGameVariables(difficulty):
         numsameheroes = 2
         x_margin = (WINDOWWIDTH - (BOXSIZE * board_width)) // 2
         y_margin = (WINDOWHEIGHT - (BOXSIZE * board_height)) // 2
-
 
 def showStartScreen():
     global board_width, board_height, numheroes_onboard, x_margin, y_margin
@@ -294,8 +180,7 @@ def showStartScreen():
 
         pygame.display.update()
         FPSCLOCK.tick(FPS)
-
-
+ 
 
 def runGame():
     mainBoard = getRandomizedBoard()
@@ -445,7 +330,7 @@ def main():
     pygame.init()
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
-    pygame.display.set_caption('Pikachu in Dota 1 style')
+    pygame.display.set_caption('Pikachu Classic')
     BASICFONT = pygame.font.SysFont('comicsansms', 70)
     LIVESFONT = pygame.font.SysFont('comicsansms', 45)
 
@@ -477,6 +362,7 @@ def drawBoard(board):
                 left, top = leftTopCoordsOfBox(boxx, boxy)
                 boxRect = pygame.Rect(left, top, BOXSIZE, BOXSIZE)
                 DISPLAYSURF.blit(HEROES_DICT[board[boxy][boxx]], boxRect)
+
 def drawLevel():
     
     level_font = pygame.font.SysFont('Arial', 25,bold=True)
@@ -484,23 +370,6 @@ def drawLevel():
     
     DISPLAYSURF.blit(level_text, ((WINDOWWIDTH // 2) - 50 , barPos[1] + 40))
     
-def drawQuit_btn():
-    quit_button_width = 60
-    quit_button_height = 30
-    quit_font = pygame.font.SysFont('Arial', 20)
-    quit_button_x = WINDOWWIDTH - quit_button_width - 150
-    quit_button_y = barPos[1] 
-    quit_button_rect = pygame.Rect(quit_button_x, quit_button_y, quit_button_width, quit_button_height)
-    
-    pygame.draw.rect(DISPLAYSURF, GREEN, quit_button_rect)
-    quit_text = quit_font.render("QUIT", True, WHITE)
-    quit_text_rect = quit_text.get_rect(center=quit_button_rect.center)
-    DISPLAYSURF.blit(quit_text, quit_text_rect)
-    
-    # Trả về rect để kiểm tra sau này
-    return quit_button_rect
-
-
 def drawHighlightBox(board, boxx, boxy):
     left, top = leftTopCoordsOfBox(boxx, boxy)
     pygame.draw.rect(DISPLAYSURF, HIGHLIGHTCOLOR, (left - 2, top - 2,
