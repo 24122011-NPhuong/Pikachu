@@ -1,0 +1,14 @@
+{
+    "easy": {
+        "level": 1,
+        "lives": 3
+    },
+    "medium": {
+        "level": 1,
+        "lives": 7
+    },
+    "hard": {
+        "level": 1,
+        "lives": 10
+    }
+}
