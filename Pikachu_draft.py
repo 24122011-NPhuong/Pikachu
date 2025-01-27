@@ -165,8 +165,12 @@ def register_window(root):
     confirm_password_entry.pack(pady=5)
 
     tk.Button(root, text="Register", command=register).pack(pady=10)
-
+    tk.Button(root, text="Back", command=lambda: login_window(root)).pack(pady=5)
+    
 def login_window(root):
+    for widget in root.winfo_children():
+        widget.destroy()
+
     def login():
         nonlocal username_entry, password_entry
 
@@ -192,6 +196,7 @@ def login_window(root):
 
     tk.Button(root, text="Login", command=login).pack(pady=10)
     tk.Button(root, text="Register", command=lambda: register_window(root)).pack(pady=5)
+    tk.Button(root, text="Back", command=lambda: start_screen(root)).pack(pady=5)
 
 def start_screen(root=None):
     if root is None:
