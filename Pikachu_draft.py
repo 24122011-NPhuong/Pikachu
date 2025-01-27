@@ -1,4 +1,4 @@
-# INSTRUCTION: Just need to change this path and can run game
+
 PATH = './Pikachu_draft' 
 
 import pygame, sys, random, copy, time, collections, os, json, hashlib
@@ -57,8 +57,8 @@ for i in range(len(LISTPOKEMONS)):
     POKEMONS_DICT[i + 1] = pygame.transform.scale(pygame.image.load('pokemon_icon/' + LISTPOKEMONS[i]), (BOXSIZE, BOXSIZE))
 
 # Load pictures
-aegis = pygame.image.load('aegis_2.jpg')
-aegis = pygame.transform.scale(aegis, (45, 45))
+pic = pygame.image.load('pic.png')
+pic = pygame.transform.scale(pic, (45, 45))
 
 # Load background
 startBG = pygame.image.load('pikachu_background/startBG.jpg')
@@ -73,7 +73,7 @@ pygame.mixer.pre_init()
 pygame.mixer.init()
 clickSound = pygame.mixer.Sound('beep4.ogg')
 getPointSound = pygame.mixer.Sound('beep1.ogg')
-# startScreenSound = pygame.mixer.Sound('warriors-of-the-night-assemble.wav')
+startScreenSound = pygame.mixer.Sound('1-20. Pokémon Gym.mp3')
 # listMusicBG = ['musicBG1.mp3', 'musicBG2.mp3', 'musicBG3.mp3', 'musicBG4.mp3', 'musicBG5.mp3']
 
 # Load sound effects
@@ -253,7 +253,7 @@ def updateGameVariables(game_mode):
 
 def showMenu_Screen():
     global board_width, board_height, numheroes_onboard, x_margin, y_margin, difficulty
-    # startScreenSound.play()
+    startScreenSound.play()
     
     while True:
         DISPLAYSURF.blit(startBG, (0, 0))
@@ -292,6 +292,7 @@ def showMenu_Screen():
                             difficulty = 'easy'
                             updateGameVariables(difficulty) 
                             DISPLAYSURF.blit(easy_btnSurf, easy_btnRect)
+                            startScreenSound.stop()
                             pygame.display.update()
                             pygame.time.wait(500)
                             return 
@@ -301,6 +302,7 @@ def showMenu_Screen():
                             difficulty = 'medium'
                             updateGameVariables(difficulty) 
                             DISPLAYSURF.blit(medium_btnSurf, medium_btnRect)
+                            startScreenSound.stop()
                             pygame.display.update()
                             pygame.time.wait(500)
                             return 
@@ -310,10 +312,11 @@ def showMenu_Screen():
                             difficulty = 'hard'
                             updateGameVariables(difficulty) 
                             DISPLAYSURF.blit(hard_btnSurf, hard_btnRect)
+                            startScreenSound.stop()
                             pygame.display.update()
                             pygame.time.wait(500)
                             return  
-
+        
         pygame.display.update()
         FPSCLOCK.tick(FPS) 
 
@@ -783,8 +786,8 @@ def alterBoardWithLevel(board, boxy1, boxx1, boxy2, boxx2, level):
     return board
 
 def drawLives():
-    aegisRect = pygame.Rect(10, 10, BOXSIZE, BOXSIZE)
-    DISPLAYSURF.blit(aegis, aegisRect)
+    picRect = pygame.Rect(10, 10, BOXSIZE, BOXSIZE)
+    DISPLAYSURF.blit(pic, picRect)
     livesSurf = LIVESFONT.render(str(lives), True, RED)
     livesRect = livesSurf.get_rect()
     livesRect.topleft = (65, 0)
