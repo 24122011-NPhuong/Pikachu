@@ -7,4 +7,4 @@
   ```bash
 pip install pygame
 ```
-## 3/ Di chuyển tới thư mục chứa repository vừa tải
+  Sau đó chạy chương trình
