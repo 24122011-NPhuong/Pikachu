@@ -1,23 +1,6 @@
 {
-    "pnp": {
+    "pnp1": {
         "password": "12345",
-        "game_info": {
-            "easy": {
-                "level": 3,
-                "lives": 2
-            },
-            "medium": {
-                "level": 3,
-                "lives": 5
-            },
-            "hard": {
-                "level": 1,
-                "lives": 7
-            }
-        }
-    },
-    "pnp123": {
-        "password": "1234567",
         "game_info": {
             "easy": {
                 "level": 1,
