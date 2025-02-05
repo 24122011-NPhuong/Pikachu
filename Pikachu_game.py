@@ -74,15 +74,9 @@ pygame.mixer.init()
 clickSound = pygame.mixer.Sound('beep4.ogg')
 getPointSound = pygame.mixer.Sound('beep1.ogg')
 startScreenSound = pygame.mixer.Sound('1-20. Pokémon Gym.mp3')
-# listMusicBG = ['musicBG1.mp3', 'musicBG2.mp3', 'musicBG3.mp3', 'musicBG4.mp3', 'musicBG5.mp3']
 
-# Load sound effects
-# LIST_SOUNDEFFECT = os.listdir('sound_effect')
 
-# for i in range(len(LIST_SOUNDEFFECT)):
-#     LIST_SOUNDEFFECT[i] = pygame.mixer.Sound('sound_effect/' + LIST_SOUNDEFFECT[i])
 
-# File mặc định
 USER_INFO_FILE = "user_info.json"
 GAME_STATE_FILE = "game_state.json"
 
@@ -180,7 +174,7 @@ def login_window(root):
         if authenticate(username, password):
             messagebox.showinfo("Success", f"Welcome, {username}!")
             root.destroy()
-            main(play_type="login", user=username)  # Truyền trực tiếp giá trị
+            main(play_type="login", user=username)
         else:
             messagebox.showerror("Error", "Invalid username or password.")
 
@@ -213,7 +207,7 @@ def start_screen(root=None):
 
     def play_as_guest():
         root.destroy()
-        main(play_type="guest", user=None)  # Truyền giá trị "guest"
+        main(play_type="guest", user=None)
 
     tk.Button(root, text="Play as Guest", command=play_as_guest).pack(pady=10)
     tk.Button(root, text="Login to Play", command=lambda: login_window(root)).pack(pady=10)
@@ -263,7 +257,6 @@ def showMenu_Screen():
     while True:
         DISPLAYSURF.blit(startBG, (0, 0))
         
-        # Render buttons for each mode
         easy_btnSurf = pygame.image.load('./button_image/easybtn.PNG')
         easy_btnSurf = pygame.transform.scale(easy_btnSurf, (100, 50))
         easy_btnRect = easy_btnSurf.get_rect()
@@ -279,7 +272,6 @@ def showMenu_Screen():
         hard_btnRect = hard_btnSurf.get_rect()
         hard_btnRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2 + 200)
 
-        # Draw buttons on the screen
         DISPLAYSURF.blit(easy_btnSurf, easy_btnRect)
         DISPLAYSURF.blit(medium_btnSurf, medium_btnRect)
         DISPLAYSURF.blit(hard_btnSurf, hard_btnRect)
@@ -500,7 +492,7 @@ def main(play_type, user):
     BASICFONT = pygame.font.SysFont('comicsansms', 70)
     LIVESFONT = pygame.font.SysFont('comicsansms', 45)
     
-    print(play_type, user)
+    # print(play_type, user) 
     
     player_type = play_type
     user_acc = user
@@ -806,31 +798,25 @@ def save_game_state(difficulty, level, lives, filename):
         except FileNotFoundError:
             game_state = {}
 
-        # Cập nhật trạng thái cho độ khó hiện tại
         game_state[difficulty] = {
             "level": level,
             "lives": lives
         }
 
-        # Ghi lại vào file JSON
         with open(filename, "w") as file:
             json.dump(game_state, file, indent=4)
-        print(f"Đã lưu trạng thái game cho độ khó '{difficulty}' vào file {filename}.")
         
     elif player_type == "login":
             try:
-                # Đọc file JSON
                 with open(filename, "r") as file:
                     user_info = json.load(file)
             except FileNotFoundError:
                 user_info = {}
 
-            # Kiểm tra xem user có tồn tại trong file hay không
             if user_acc not in user_info:
-                print(f"Người dùng '{user_acc}' không tồn tại. Không thể lưu trạng thái game.")
+                print(f"Tài khoản '{user_acc}' không tồn tại. Không thể lưu game.")
                 return
 
-            # Cập nhật trạng thái trò chơi vào phần "game_info" của user
             if "game_info" not in user_info[user_acc]:
                 user_info[user_acc]["game_info"] = {}
 
@@ -839,11 +825,9 @@ def save_game_state(difficulty, level, lives, filename):
                 "lives": lives
             }
 
-            # Ghi lại vào file JSON
             with open(filename, "w") as file:
                 json.dump(user_info, file, indent=4)
 
-            print(f"Đã lưu trạng thái game cho người dùng '{user_acc}', độ khó '{difficulty}' vào file {filename}.")
 
 def load_game_state(difficulty):
     global player_type, user_acc
@@ -854,17 +838,14 @@ def load_game_state(difficulty):
                 game_state = json.load(file)
 
             if difficulty in game_state:
-                print(f"Đã tải trạng thái game cho độ khó '{difficulty}' từ file {filename}.")
                 return game_state[difficulty]
             else:
-                print(f"Không tìm thấy trạng thái game cho độ khó '{difficulty}'. Khởi tạo mặc định.")
                 return {
                     "level": 1,
                     "lives": 3 if difficulty == "easy" else 5 if difficulty == "medium" else 7
                 }
 
         except FileNotFoundError:
-            print(f"File {filename} không tồn tại! Khởi tạo trạng thái mặc định.")
             return {
                 "level": 1,
                 "lives": 3 if difficulty == "easy" else 5 if difficulty == "medium" else 7
@@ -876,27 +857,23 @@ def load_game_state(difficulty):
             with open(filename, "r") as file:
                 game_data = json.load(file)
 
-            if user_acc in game_data:  # Check if the username exists in the file
+            if user_acc in game_data:
                 game_info = game_data[user_acc].get("game_info", {})
 
                 if difficulty in game_info:
-                    print(f"Loaded game state for user '{user_acc}' and difficulty '{difficulty}' from file {filename}.")
                     return game_info[difficulty]
                 else:
-                    print(f"No game state found for user '{user_acc}' and difficulty '{difficulty}'. Initializing defaults.")
                     return {
                         "level": 1,
                         "lives": 3 if difficulty == "easy" else 5 if difficulty == "medium" else 7
                     }
             else:
-                print(f"User '{user_acc}' not found in file {filename}. Initializing defaults.")
                 return {
                     "level": 1,
                     "lives": 3 if difficulty == "easy" else 5 if difficulty == "medium" else 7
                 }
 
         except FileNotFoundError:
-            print(f"File {filename} not found! Initializing default game state.")
             return {
                 "level": 1,
                 "lives": 3 if difficulty == "easy" else 5 if difficulty == "medium" else 7
@@ -938,13 +915,12 @@ def draw_completed_game_option():
                     pygame.time.wait(100)
                     return False
 
-def showGameModeCompletedScreen(): # Chỉnh sửa lại
+def showGameModeCompletedScreen(): 
     CongratulationFont = pygame.font.Font('freesansbold.ttf', 50)
     CongratulationSurf = CongratulationFont.render('Congratulation!', True, GREEN)
     CongratulationRect = CongratulationSurf.get_rect()
     CongratulationRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2)
     DISPLAYSURF.blit(CongratulationSurf, CongratulationRect)
-    # pygame.draw.rect(DISPLAYSURF, GREEN, CongratulationRect, 4)
     pygame.display.update()
     pygame.time.wait(2000)
     return main(player_type, user_acc)
@@ -972,10 +948,8 @@ def reset_guest_game_state(filename="game_state.json"):
                     }
         }
 
-        # Ghi lại vào file JSON
         with open(filename, "w") as file:
             json.dump(game_state, file, indent=4)
-        print(f"Đã reset game_state.")
 
     else: 
         pass
